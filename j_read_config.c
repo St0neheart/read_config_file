@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "j_read_config.h"
 #include "j_linked_list.h"
 #include "cjson.h"
 
 char domain[DOMAIN_MAX_LEN] = "default";
-static domain_num = 0;
-static realloc_times = 0;
+static int domain_num = 0;
+static int realloc_times = 0;
 void str_trim_crlf(char *str)
 {
     char *p = &str[strlen(str)-1];
@@ -36,7 +37,7 @@ int get_domain(struct j_linked_list_node *header, const char *str, int rows)
 
     if(len - 2 > DOMAIN_MAX_LEN - 1)
     {
-        printf("[%d] the domain must less than %s bytes",rows,DOMAIN_MAX_LEN);
+        printf("[%d] the domain must less than %d bytes",rows,DOMAIN_MAX_LEN);
         return -1;
     }
 
@@ -66,20 +67,25 @@ int get_domain(struct j_linked_list_node *header, const char *str, int rows)
     domain_num++;
     return 0;
 }
-int get_config_setting(struct j_linked_list_node *header, const char *str, int rows)
+int get_config_setting(struct j_linked_list_node *header, char *str, int rows)
 {
-    char *token;
+    char *token = NULL;
     char *tmp = str;
 
     token = strsep(&tmp, "=");
+    if(token == NULL)
+    {
+        printf("strsep error\n");
+        return -1;
+    }
     if(strlen(token) + 1 > KEY_MAX_LEN)
     {
-        printf("[%d] the key must be less than %s bytes", rows, KEY_MAX_LEN);
+        printf("[%d] the key must be less than %d bytes", rows, KEY_MAX_LEN);
         return -1;
     }
     if(strlen(tmp) + 1 > VALUE_MAX_LEN)
     {
-        printf("[%d] the value must be less than %s bytes", rows, VALUE_MAX_LEN);
+        printf("[%d] the value must be less than %d bytes", rows, VALUE_MAX_LEN);
         return -1;
     }
 

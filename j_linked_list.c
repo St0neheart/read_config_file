@@ -16,13 +16,6 @@ struct j_linked_list_node *search_config(struct j_read_config_s *data_in, struct
     return ret;
 }
 
-struct j_linked_list_node *delete_node(struct j_linked_list_node *priv_node, struct j_linked_list_node *target)
-{
-    priv_node->next = target->next;
-    free(target);
-    target = NULL;
-}
-
 int free_list(struct j_linked_list_node *header)
 {
     struct j_linked_list_node *t1 = header;
