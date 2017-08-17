@@ -5,9 +5,13 @@
 
 struct j_linked_list_node
 {
-    j_read_config_s     data;
-    j_linked_list_node  *nextp;
-}
+    struct j_read_config_s      data;
+    struct j_linked_list_node   *next;
+    struct j_domain_s           *domain_list;
+};
 
+struct j_linked_list_node *search_config(struct j_read_config_s *data_in, struct j_linked_list_node *header);
+
+int free_list(struct j_linked_list_node *header);
 
 #endif

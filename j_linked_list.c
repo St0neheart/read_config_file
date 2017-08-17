@@ -3,35 +3,38 @@
 
 #include "j_linked_list.h"
 
-j_linked_list_node *create_list(j_read_config_s *data)
+struct j_linked_list_node *search_config(struct j_read_config_s *data_in, struct j_linked_list_node *header)
 {
-    j_linked_list_node *header = (j_linked_list_node)malloc(sizeof(j_linked_list_node));
-
-    header->data = data;
-    header->next = NULL;
-    return header;
-}
-
-j_linked_list_node *add_node(j_read_config_s *data, j_linked_list_node *end)
-{
-    j_linked_list_node *add = (j_linked_list_node)malloc(sizeof(j_linked_list_node));
-
-    add->data = data;
-    add->next = NULL;
-    end->next = add;
-
-    return add;
-}
-
-j_linked_list_node *search_config(j_read_config_s *data_in, j_linked_list_node *header)
-{
-    j_linked_list_node *tmp = header;
-    j_linked_list_node *ret = NULL;
+    struct j_linked_list_node *tmp = header;
+    struct j_linked_list_node *ret = NULL;
 
     for(;tmp != NULL; tmp=tmp->next)
     {
-        if(!strcmp(tmp->data->domain, data_in->domain) && !strcmp(tmp->data->key, data_in->key))
+        if(!strcmp(tmp->data.domain, data_in->domain) && !strcmp(tmp->data.key, data_in->key))
             ret = tmp;
     }
     return ret;
+}
+
+struct j_linked_list_node *delete_node(struct j_linked_list_node *priv_node, struct j_linked_list_node *target)
+{
+    priv_node->next = target->next;
+    free(target);
+    target = NULL;
+}
+
+int free_list(struct j_linked_list_node *header)
+{
+    struct j_linked_list_node *t1 = header;
+    struct j_linked_list_node *t2 = header;
+
+    free(header->domain_list);
+    while(t1 != NULL)
+    {
+        t2 = t1->next;
+        free(t1);
+        t1 = t2;
+    }
+    header = NULL;
+    return 0;
 }
