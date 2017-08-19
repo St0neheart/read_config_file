@@ -9,23 +9,27 @@
 char domain[DOMAIN_MAX_LEN] = "default";
 static int domain_num = 0;
 static int realloc_times = 0;
+
+// replace line feeds with '\0'
 void str_trim_crlf(char *str)
 {
     char *p = &str[strlen(str)-1];
     while(*p == '\r' || *p == '\n')
         *p-- = '\0';
 }
+// remove redundant spaces and tabs
 char *rtspace(char *str)
 {
     char *it=NULL;
     str_trim_crlf(str);
-    while( *str == ' ' && *str)
+    while( (*str == ' ' || *str == '\t') && *str)
         ++str;
     it=str;
     while(*str)
         str++;
-    while(*(--str)==' ')
-        ;
+    str--;
+    while(*(str)==' ' || *str == '\t')
+        str--;
     *(++str)='\0';
     return it;
 }
